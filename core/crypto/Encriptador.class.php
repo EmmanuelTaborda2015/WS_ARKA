@@ -1,13 +1,12 @@
 <?php
 
 /**
- * IMPORTANTE: La frase de seguridad predeterminada debe cambiarse antes instalar el aplicativo. Cambiarla después puede dejar
- * inservible la instalación si esta depende de variables codificadas con la clave anterior 
- * (p.e. si se guardaron datos codificados en la base de datos o en config.inc.php).
+ * IMPORTANTE: Cambiar la frase de seguridad predeterminada afecta el aplicativo si este depende de variables codificadas 
+ * con la clave anterior (p.e. si se guardaron datos codificados en la base de datos o en config.inc.php).
  * 
  * 
- * @todo Mejorar la clase para que acepte otras semillas. 
- * 
+ * @todo Mejorar la clase para que acepte otras semillas. Tener cuidado pues esta clase se utiliza en bootstrap para decodificar
+ * las variables de cofig.inc.php
  */
 require_once ("aes.class.php");
 require_once ("aesctr.class.php");
@@ -15,7 +14,6 @@ class Encriptador {
 	private static $instance;
 	private $llave;
 	private $iv;
-	//Se requiere una semilla de 16, 24 o 32 caracteres
 	const SEMILLA = '0xel0t1l';
 	
 	// Constructor
@@ -27,6 +25,9 @@ class Encriptador {
 			$this->llave = $llave;
 		}
 		
+// 		echo $this->decodificar('i0CbW8vQxZlAKVdlSQ2LkiCfFzF8X2Ehot63MsL9WGY');
+
+		
 	}
 
 	public static function singleton() {
@@ -37,7 +38,7 @@ class Encriptador {
 		return self::$instance;
 	}
 	
-	function codificar($cadena) {		
+	function codificar($cadena) {
 		if (function_exists ( 'mcrypt_encrypt' )) {
 			$cadena = mcrypt_encrypt ( MCRYPT_RIJNDAEL_256, $this->llave, $cadena, MCRYPT_MODE_ECB ) ;
 		} else {
@@ -48,7 +49,8 @@ class Encriptador {
 	}
 	
 	
-	function decodificar($cadena) {		
+	function decodificar($cadena) {
+		
 		$cadena=$this->base64url_decode($cadena);
 		if (function_exists ( 'mcrypt_decrypt' )) {
 			$cadena =  mcrypt_decrypt ( MCRYPT_RIJNDAEL_256, $this->llave, $cadena , MCRYPT_MODE_ECB ) ;
@@ -56,7 +58,7 @@ class Encriptador {
 			$cadena = AesCtr::decrypt ( $cadena , $this->llave, 256 );
 		}
 		$cadena=trim($cadena);
-		return  $cadena;
+		return $cadena;
 	}
 	
 	

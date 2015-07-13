@@ -23,16 +23,47 @@ class Sql {
 				$this->cadenaSql = $cadenaSql; 	
 				break;
 				
-			case 'dependencia' :
+			case 'funcionario' :
 				
 				$cadenaSql = 'SELECT';
-				$cadenaSql .= ' DISTINCT';
-				$cadenaSql .= ' nombre';
+				$cadenaSql .= " \"FUN_NOMBRE\",";
+				$cadenaSql .= " \"FUN_IDENTIFICACION\"";
 				$cadenaSql .= ' FROM';
-				$cadenaSql .= ' dependencia';	
+				$cadenaSql .= ' arka_parametros.arka_funcionarios';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= " \"FUN_ESTADO\"='A'";				
 				$this->cadenaSql = $cadenaSql;				
 				break;		
 
+			case 'sede' :
+				$cadenaSql = "SELECT DISTINCT  \"ESF_ID_SEDE\", \"ESF_SEDE\" ";
+				$cadenaSql .= " FROM arka_parametros.arka_sedes ";
+				$cadenaSql .= " WHERE   \"ESF_ESTADO\"='A' ";
+				$cadenaSql .= " AND    \"ESF_COD_SEDE\" >  0 ";	
+				$this->cadenaSql = $cadenaSql;
+				break;
+			
+			case 'dependencia' :
+				
+				$cadenaSql = "SELECT DISTINCT  \"ESF_CODIGO_DEP\" , \"ESF_DEP_ENCARGADA\" ";
+				$cadenaSql .= " FROM arka_parametros.arka_dependencia ad ";
+				$cadenaSql .= " JOIN  arka_parametros.arka_espaciosfisicos ef ON  ef.\"ESF_ID_ESPACIO\"=ad.\"ESF_ID_ESPACIO\" ";
+				$cadenaSql .= " JOIN  arka_parametros.arka_sedes sa ON sa.\"ESF_COD_SEDE\"=ef.\"ESF_COD_SEDE\" ";
+				$cadenaSql .= " WHERE sa.\"ESF_ID_SEDE\"='" . $variable . "' ";
+				$cadenaSql .= " AND  ad.\"ESF_ESTADO\"='A'";
+				$this->cadenaSql = $cadenaSql;
+				break;
+			
+			case 'ubicacion' :
+				
+				$cadenaSql = "SELECT DISTINCT  ef.\"ESF_ID_ESPACIO\" , ef.\"ESF_NOMBRE_ESPACIO\" ";
+				$cadenaSql .= " FROM arka_parametros.arka_espaciosfisicos ef  ";
+				$cadenaSql .= " JOIN arka_parametros.arka_dependencia ad ON ad.\"ESF_ID_ESPACIO\"=ef.\"ESF_ID_ESPACIO\" ";
+				$cadenaSql .= " WHERE ad.\"ESF_CODIGO_DEP\"='" . $variable . "' ";
+				$cadenaSql .= " AND  ef.\"ESF_ESTADO\"='A'";
+				$this->cadenaSql = $cadenaSql;
+				break;
+						
 			case 'num_visita' :
 				
 				$cadenaSql = 'SELECT';

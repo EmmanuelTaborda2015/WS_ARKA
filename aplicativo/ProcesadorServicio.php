@@ -15,6 +15,7 @@ class ProcesadorServicio {
 	var $conexionPostgresqlFrame;
 	var $conexionPostgresqlInventarios;
 	var $conexionPostgresqlMovil;
+	var $conexionPostgresqlParametros;
 	var $mensajeError;
         
 	// Error 1: No se pudo conectar a ORACLE
@@ -81,6 +82,18 @@ class ProcesadorServicio {
 			$this->mensajeError='Error 2';
 			return false;
 		}
+		
+		// 		4. Crear conexión a POSTGRESQL ARKA_PARAMETROS.
+		$datosConexion->setDatosConexion ( "parametros" );
+		$this->miFabricaConexiones->setRecursoDB ( "postgresql", $datosConexion );
+		$this->conexionPostgresqlParametros = $this->miFabricaConexiones->getRecursoDB ( "postgresql" );
+		
+		if (! $this->conexionPostgresqlParametros) {
+			ECHO 'ERROR CONECTANDO POSTGRESQL';
+			error_log ( 'NO SE CONECTO A POSTGRESQL');
+			$this->mensajeError='Error 2';
+			return false;
+		}
 				
 		return true;	
 	}
@@ -89,7 +102,11 @@ class ProcesadorServicio {
 	
 	function login($usuario, $contrasenna) {
 
-		$contrasenna =  $this->crypto->codificar($contrasenna);
+// 		$contrasenna =  $this->crypto->decodificar('eab41e38426312cf48baaaf80af9ee88b6023a44');
+
+		$contrasenna =  $this->crypto->codificar('sistemasoas');
+		$contrasenna =  $this->crypto->codificarClave($contrasenna);
+		
 		
 		echo $contrasenna;
 		
@@ -108,6 +125,38 @@ class ProcesadorServicio {
 			return "true";
 			//return 'true ' . $resultado[0]['nombre'];
 		}
+	}
+	
+	function funcionario() {
+		
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'funcionario' );
+		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+			
+		return $resultado;
+	}
+	
+	function sede(){
+		
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'sede' );
+		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+			
+		return $resultado;
+	}
+	
+	function dependencia($sede){
+	
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'dependencia', $sede );
+		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+
+		return $resultado;
+	}
+	
+	function ubicacion($dependencia){
+	
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'ubicacion', $dependencia );
+		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+		var_dump($cadenaSql);
+		return $resultado;
 	}
 	
 	function consultar_visita() {
@@ -325,7 +374,11 @@ class ProcesadorServicio {
 
 $llamada = new ProcesadorServicio;
 
-$resultado = $llamada-> login('1100000', 'sistemasoas');
+// $resultado = $llamada-> login('1100000', 'sistemasoas');
+// $resultado = $llamada->funcionario();
+// $resultado = $llamada->sede();
+// $resultado = $llamada->dependencia('FICC');
+// $resultado = $llamada->ubicacion('DEP180');
 // $resultado = $llamada-> consultar_visita();
 // $resultado = $llamada->registrarActaVisita('sede', 'dependencia', '1032418216', 'ninguna', '15/08/2015', '15/07/2016');
 // $resultado = $llamada->actualizarInventario('1', '1234', '12345', 'Existente y Activo', 'ninguna', '15/08/1988');
@@ -341,6 +394,6 @@ $resultado = $llamada-> login('1100000', 'sistemasoas');
 // $resultado = $llamada->consultar_placa_imagen('2015070600000');
 // $resultado = $llamada->consultar_imagen('3');
 
-echo($resultado);
-var_dump($resultado);
+// echo($resultado);
+// var_dump($resultado);
 ?>
