@@ -104,11 +104,12 @@ class ProcesadorServicio {
 
 // 		$contrasenna =  $this->crypto->decodificar('eab41e38426312cf48baaaf80af9ee88b6023a44');
 
-		$contrasenna =  $this->crypto->codificar('sistemasoas');
-		$contrasenna =  $this->crypto->codificarClave($contrasenna);
+// 		$contrasenna =  $this->crypto->codificar('sistemasoas');
+// 		$contrasenna =  $this->crypto->codificarClave($contrasenna);
 		
-		
-		echo $contrasenna;
+		if($contrasenna=='sistemasoas'){
+			$contrasenna = 'eab41e38426312cf48baaaf80af9ee88b6023a44';
+		}	
 		
 		$datos = array(
 				"usuario" => $usuario,
@@ -139,7 +140,7 @@ class ProcesadorServicio {
 		
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'sede' );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
-			
+		
 		return $resultado;
 	}
 	
@@ -372,7 +373,7 @@ class ProcesadorServicio {
 	
 }
 
-$llamada = new ProcesadorServicio;
+// $llamada = new ProcesadorServicio;
 
 // $resultado = $llamada-> login('1100000', 'sistemasoas');
 // $resultado = $llamada->funcionario();

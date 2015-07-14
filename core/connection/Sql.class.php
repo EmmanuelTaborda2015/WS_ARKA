@@ -49,7 +49,7 @@ class Sql {
 				$cadenaSql .= " FROM arka_parametros.arka_dependencia ad ";
 				$cadenaSql .= " JOIN  arka_parametros.arka_espaciosfisicos ef ON  ef.\"ESF_ID_ESPACIO\"=ad.\"ESF_ID_ESPACIO\" ";
 				$cadenaSql .= " JOIN  arka_parametros.arka_sedes sa ON sa.\"ESF_COD_SEDE\"=ef.\"ESF_COD_SEDE\" ";
-				$cadenaSql .= " WHERE sa.\"ESF_ID_SEDE\"='" . $variable . "' ";
+				$cadenaSql .= " WHERE sa.\"ESF_SEDE\"='" . $variable . "' ";
 				$cadenaSql .= " AND  ad.\"ESF_ESTADO\"='A'";
 				$this->cadenaSql = $cadenaSql;
 				break;
