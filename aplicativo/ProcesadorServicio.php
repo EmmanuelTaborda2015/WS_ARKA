@@ -156,6 +156,19 @@ class ProcesadorServicio {
 	
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'ubicacion', $dependencia );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+		return $resultado;
+	}
+	
+	function tipoConfirmacionInventario($estado, $criterio, $dato, $offset, $limit){
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacion' );
+		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+		return $resultado;
+	}
+	
+	function tipoConfirmacion($dependencia){
+	
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'tipoConfirmacion' );
+		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
 		var_dump($cadenaSql);
 		return $resultado;
 	}
@@ -172,7 +185,7 @@ class ProcesadorServicio {
 		}
 	}
 	
-	function registrarActaVisita($sede, $dependencia, $responsable, $observacion, $fecha, $proxima_vis) {
+	function registrarActaVisita($sede, $dependencia, $responsable, $observacion, $fecha, $proxima_vis, $ubicacion) {
 	
 		$datos = array(
 				"sede" => $sede,
@@ -181,6 +194,7 @@ class ProcesadorServicio {
 				"observacion" => $observacion,
 				"fecha" => $fecha,
 				"proxima_vis" => $proxima_vis,
+				"ubicacion" => $ubicacion,
 		);
 			
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'registrarActaVisita',  $datos);
@@ -227,7 +241,7 @@ class ProcesadorServicio {
 	
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_elementos',  $funcionario);
 		$resultado = $this->conexionPostgresqlInventarios->ejecutarAcceso ($cadenaSql, 'busqueda');
-	
+		
 		//En la aplicación android se debe cambiar id_elemento por id_elemento_ind
 		return $resultado;
 	}
@@ -295,12 +309,11 @@ class ProcesadorServicio {
 	}
 	
 	function asignar_elementos($fecha_inicio, $fecha_final) {
-	
 		$datos = array(
 				'fecha_inicio' => $fecha_inicio,
 				'fecha_final' => $fecha_final,
 		);
-	
+		
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'asignar_elementos',  $datos);
 		$resultado = $this->conexionPostgresqlInventarios->ejecutarAcceso ($cadenaSql, 'busqueda');
 	
@@ -308,7 +321,7 @@ class ProcesadorServicio {
 		return $resultado;
 	}
 	
-	function asignar_elementos_funcionario($sede, $dependencia, $funcionario, $id_elemento, $observaciones, $fecha_registro) {
+	function asignar_elementos_funcionario($sede, $dependencia, $funcionario, $id_elemento, $observaciones, $fecha_registro, $ubicacion) {
 	
 		$datos = array(
 				'sede' => $sede,
@@ -317,6 +330,7 @@ class ProcesadorServicio {
 				'id_elemento' => $id_elemento,
 				'observaciones' => $observaciones,
 				'fecha_registro' => $fecha_registro,
+				'ubicacion' => $ubicacion,
 		);
 	
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'actualizar_elementos',  $datos['id_elemento']);
@@ -383,17 +397,18 @@ class ProcesadorServicio {
 // $resultado = $llamada-> consultar_visita();
 // $resultado = $llamada->registrarActaVisita('sede', 'dependencia', '1032418216', 'ninguna', '15/08/2015', '15/07/2016');
 // $resultado = $llamada->actualizarInventario('1', '1234', '12345', 'Existente y Activo', 'ninguna', '15/08/1988');
-// $resultado = $llamada->consultar_elementos('79390069');
+// $resultado = $llamada->consultar_elementos('7169011');
 // $resultado = $llamada->consultar_elementos_dependencia('FMVI050109');
 // $resultado = $llamada->consultar_placa('2015070600000');
 // $resultado = $llamada->consultar_asignaciones('1');
 // $resultado = $llamada->consultar_estado('3');
 // $resultado = $llamada->consultar_observacion('3');
-// $resultado = $llamada->asignar_elementos('1/1/2015', '1/9/2015');
+// $resultado = $llamada->asignar_elementos('14/07/2015', '15/07/2015');
 // $resultado = $llamada->asignar_elementos_funcionario('sede', 'dependencia', '1032418216', '12', 'ninguna', '11/07/2015');
 // $resultado = $llamada->asignar_imagen('3', 'imagen_emmanuel');
 // $resultado = $llamada->consultar_placa_imagen('2015070600000');
 // $resultado = $llamada->consultar_imagen('3');
+//  $resultado = $llamada->tipoConfirmacionInventario();
 
 // echo($resultado);
 // var_dump($resultado);
