@@ -63,48 +63,252 @@ class Sql {
 				$cadenaSql .= " AND  ef.\"ESF_ESTADO\"='A'";
 				$this->cadenaSql = $cadenaSql;
 				break;
+
+// 				SELECT DISTINCT doc_fun, nom_fun, id_sede, nombre_sede, id_dependencia, nom_dependencia
+// 				FROM (SELECT DISTINCT funcionario as doc_fun, fc."FUN_NOMBRE" as nom_fun, sd."ESF_ID_SEDE" as id_sede, sd."ESF_SEDE"
+// 						as nombre_sede, dp."ESF_CODIGO_DEP" as id_dependencia, dp."ESF_DEP_ENCARGADA" as nom_dependencia, ei.ubicacion_elemento
+// 						as id_espacio, ef."ESF_NOMBRE_ESPACIO" as nom_espacio, el.tipo_bien FROM arka_inventarios.elemento_individual
+// 						as ei INNER JOIN arka_parametros.arka_espaciosfisicos as ef ON ef."ESF_ID_ESPACIO"= ubicacion_elemento
+// 						INNER JOIN arka_parametros.arka_sedes as sd ON ef."ESF_COD_SEDE" = sd."ESF_COD_SEDE" INNER JOIN arka_parametros.arka_dependencia
+// 						as dp ON ef."ESF_ID_ESPACIO" = dp."ESF_ID_ESPACIO" INNER JOIN arka_parametros.arka_funcionarios
+// 						as fc ON fc."FUN_IDENTIFICACION"=funcionario INNER JOIN arka_inventarios.elemento
+// 						as el ON ei.id_elemento_ind = el.id_elemento WHERE funcionario != 0 AND funcionario is not null AND estado_registro = true AND el.tipo_bien != 1) as a
+// 						--WHERE
+// 						--id_sede = 'FICC'
+// 								--id_dependencia='DEP12'
+// 										--doc_fun = '79708124'
+
+			case 'inventariosTipoConfirmacionTodos' :
 				
-// 				select distinct funcionario, "ESF_ID_SEDE" 
-// 						as sede, "ESF_CODIGO_DEP" as dependencia, ubicacion_elemento 
-// 						as ubicacion, estado_registro from elemento_individual 
-// 						inner join arka_parametros.arka_espaciosfisicos 
-// 						on arka_parametros.arka_espaciosfisicos."ESF_ID_ESPACIO"= ubicacion_elemento 
-// 						inner Join arka_parametros.arka_sedes on 
-// 						arka_parametros.arka_espaciosfisicos."ESF_COD_SEDE" = arka_parametros.arka_sedes."ESF_COD_SEDE"
-// 				inner join arka_parametros.arka_dependencia on arka_parametros.arka_espaciosfisicos."ESF_ID_ESPACIO" = arka_parameselecttros.arka_dependencia."ESF_ID_ESPACIO"
-// 						 where funcionario != 0 and funcionario is not null and estado_registro = true
-				
-			case 'inventariosTipoConfirmacion' :
-				
-				$cadenaSql = "SELECT DISTINCT";
-				$cadenaSql .= ' id_elemento_ind,';
-				$cadenaSql .= ' funcionario as doc_fun,';
-				$cadenaSql .= " \"FUN_NOMBRE\" as nom_fun,";
-				$cadenaSql .= " \"ESF_ID_SEDE\" as id_sede,";
-				$cadenaSql .= " \"ESF_SEDE\" as nombre_sede,";
-				$cadenaSql .= " \"ESF_CODIGO_DEP\" as id_dependencia,";
-				$cadenaSql .= " \"ESF_DEP_ENCARGADA\" as nom_dependencia,";
-				$cadenaSql .= " ubicacion_elemento as id_espacio,";
-				$cadenaSql .= " \"ESF_NOMBRE_ESPACIO\" as nom_espacio,";
-				$cadenaSql .= " estado_registro";				
+				$cadenaSql = 'SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= ' doc_fun,';
+				$cadenaSql .= ' nom_fun,';
+				$cadenaSql .= ' id_sede,';
+				$cadenaSql .= ' nombre_sede,';
+				$cadenaSql .= ' id_dependencia,';
+				$cadenaSql .= ' nom_dependencia';
 				$cadenaSql .= ' FROM';
-				$cadenaSql .= ' elemento_individual';
-				$cadenaSql .= ' INNER JOIN arka_parametros.arka_espaciosfisicos';
-				$cadenaSql .= " ON arka_parametros.arka_espaciosfisicos.\"ESF_ID_ESPACIO\"= ubicacion_elemento";
-				$cadenaSql .= ' INNER JOIN arka_parametros.arka_sedes';
-				$cadenaSql .= " ON arka_parametros.arka_espaciosfisicos.\"ESF_COD_SEDE\" = arka_parametros.arka_sedes.\"ESF_COD_SEDE\"";
-				$cadenaSql .= ' INNER JOIN arka_parametros.arka_dependencia';
-				$cadenaSql .= " ON arka_parametros.arka_espaciosfisicos.\"ESF_ID_ESPACIO\" = arka_parametros.arka_dependencia.\"ESF_ID_ESPACIO\"";
-				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios';
-				$cadenaSql .= " ON \"FUN_IDENTIFICACION\"=funcionario";
+				$cadenaSql .= ' (';
+				$cadenaSql .= ' SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= ' funcionario as doc_fun,';
+				$cadenaSql .= " fc.\"FUN_NOMBRE\" as nom_fun,";
+				$cadenaSql .= " sd.\"ESF_ID_SEDE\" as id_sede,";
+				$cadenaSql .= " sd.\"ESF_SEDE\" as nombre_sede,";
+				$cadenaSql .= " dp.\"ESF_CODIGO_DEP\" as id_dependencia,";
+				$cadenaSql .= " dp.\"ESF_DEP_ENCARGADA\" as nom_dependencia,";
+				$cadenaSql .= ' ei.ubicacion_elemento as id_espacio,';
+				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as nom_espacio,";
+				$cadenaSql .= ' el.tipo_bien';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_inventarios.elemento_individual as ei';
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_espaciosfisicos as ef';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\"= ubicacion_elemento";
+				$cadenaSql .= " INNER JOIN arka_parametros.arka_sedes as sd";
+				$cadenaSql .= " ON ef.\"ESF_COD_SEDE\" = sd.\"ESF_COD_SEDE\"";
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_dependencia as dp';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios as fc';
+				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"=funcionario";
+				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento as el';
+				$cadenaSql .= ' ON ei.id_elemento_ind = el.id_elemento';
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' funcionario != 0';
-				$cadenaSql .= ' AND';
-				$cadenaSql .= ' funcionario is not null';
-				$cadenaSql .= ' AND';
-				$cadenaSql .= ' estado_registro = true';				
+				$cadenaSql .= ' AND funcionario is not null';
+				$cadenaSql .= ' AND estado_registro = true';
+				$cadenaSql .= ' AND el.tipo_bien != 1';
+				$cadenaSql .= ' AND ei.tipo_confirmada = ' .'\'' . $variable["tipo_confirmacion"] . '\'';
+				$cadenaSql .= ' )';
+				$cadenaSql .= ' as a';				
+				$cadenaSql .= ' ORDER BY doc_fun';
 				$this->cadenaSql = $cadenaSql;
 				break;
+				
+												
+			case 'inventariosTipoConfirmacionFuncionario' :
+				
+								$cadenaSql = 'SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= ' doc_fun,';
+				$cadenaSql .= ' nom_fun,';
+				$cadenaSql .= ' id_sede,';
+				$cadenaSql .= ' nombre_sede,';
+				$cadenaSql .= ' id_dependencia,';
+				$cadenaSql .= ' nom_dependencia';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' (';
+				$cadenaSql .= ' SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= ' funcionario as doc_fun,';
+				$cadenaSql .= " fc.\"FUN_NOMBRE\" as nom_fun,";
+				$cadenaSql .= " sd.\"ESF_ID_SEDE\" as id_sede,";
+				$cadenaSql .= " sd.\"ESF_SEDE\" as nombre_sede,";
+				$cadenaSql .= " dp.\"ESF_CODIGO_DEP\" as id_dependencia,";
+				$cadenaSql .= " dp.\"ESF_DEP_ENCARGADA\" as nom_dependencia,";
+				$cadenaSql .= ' ei.ubicacion_elemento as id_espacio,';
+				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as nom_espacio,";
+				$cadenaSql .= ' el.tipo_bien';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_inventarios.elemento_individual as ei';
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_espaciosfisicos as ef';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\"= ubicacion_elemento";
+				$cadenaSql .= " INNER JOIN arka_parametros.arka_sedes as sd";
+				$cadenaSql .= " ON ef.\"ESF_COD_SEDE\" = sd.\"ESF_COD_SEDE\"";
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_dependencia as dp';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios as fc';
+				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"=funcionario";
+				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento as el';
+				$cadenaSql .= ' ON ei.id_elemento_ind = el.id_elemento';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' funcionario != 0';
+				$cadenaSql .= ' AND funcionario is not null';
+				$cadenaSql .= ' AND estado_registro = true';
+				$cadenaSql .= ' AND el.tipo_bien != 1';
+				$cadenaSql .= ' AND ei.tipo_confirmada = ' .'\'' . $variable["tipo_confirmacion"] . '\'';
+				$cadenaSql .= ' )';
+				$cadenaSql .= ' as a';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' doc_fun =' .'\'' . $variable["funcionario"] . '\'';
+				$cadenaSql .= ' ORDER BY doc_fun';
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
+				case 'inventariosTipoConfirmacionSede' :
+				
+								$cadenaSql = 'SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= ' doc_fun,';
+				$cadenaSql .= ' nom_fun,';
+				$cadenaSql .= ' id_sede,';
+				$cadenaSql .= ' nombre_sede,';
+				$cadenaSql .= ' id_dependencia,';
+				$cadenaSql .= ' nom_dependencia';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' (';
+				$cadenaSql .= ' SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= ' funcionario as doc_fun,';
+				$cadenaSql .= " fc.\"FUN_NOMBRE\" as nom_fun,";
+				$cadenaSql .= " sd.\"ESF_ID_SEDE\" as id_sede,";
+				$cadenaSql .= " sd.\"ESF_SEDE\" as nombre_sede,";
+				$cadenaSql .= " dp.\"ESF_CODIGO_DEP\" as id_dependencia,";
+				$cadenaSql .= " dp.\"ESF_DEP_ENCARGADA\" as nom_dependencia,";
+				$cadenaSql .= ' ei.ubicacion_elemento as id_espacio,';
+				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as nom_espacio,";
+				$cadenaSql .= ' el.tipo_bien';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_inventarios.elemento_individual as ei';
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_espaciosfisicos as ef';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\"= ubicacion_elemento";
+				$cadenaSql .= " INNER JOIN arka_parametros.arka_sedes as sd";
+				$cadenaSql .= " ON ef.\"ESF_COD_SEDE\" = sd.\"ESF_COD_SEDE\"";
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_dependencia as dp';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios as fc';
+				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"=funcionario";
+				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento as el';
+				$cadenaSql .= ' ON ei.id_elemento_ind = el.id_elemento';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' funcionario != 0';
+				$cadenaSql .= ' AND funcionario is not null';
+				$cadenaSql .= ' AND estado_registro = true';
+				$cadenaSql .= ' AND el.tipo_bien != 1';
+				$cadenaSql .= ' AND ei.tipo_confirmada = ' .'\'' . $variable["tipo_confirmacion"] . '\'';
+				$cadenaSql .= ' )';
+				$cadenaSql .= ' as a';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' id_sede =' .'\'' . $variable["sede"] . '\'';
+				$cadenaSql .= ' ORDER BY doc_fun';
+				$this->cadenaSql = $cadenaSql;
+				break;
+			
+			case 'inventariosTipoConfirmacionDependencia' :
+				
+								$cadenaSql = 'SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= ' doc_fun,';
+				$cadenaSql .= ' nom_fun,';
+				$cadenaSql .= ' id_sede,';
+				$cadenaSql .= ' nombre_sede,';
+				$cadenaSql .= ' id_dependencia,';
+				$cadenaSql .= ' nom_dependencia';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' (';
+				$cadenaSql .= ' SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= ' funcionario as doc_fun,';
+				$cadenaSql .= " fc.\"FUN_NOMBRE\" as nom_fun,";
+				$cadenaSql .= " sd.\"ESF_ID_SEDE\" as id_sede,";
+				$cadenaSql .= " sd.\"ESF_SEDE\" as nombre_sede,";
+				$cadenaSql .= " dp.\"ESF_CODIGO_DEP\" as id_dependencia,";
+				$cadenaSql .= " dp.\"ESF_DEP_ENCARGADA\" as nom_dependencia,";
+				$cadenaSql .= ' ei.ubicacion_elemento as id_espacio,';
+				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as nom_espacio,";
+				$cadenaSql .= ' el.tipo_bien';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_inventarios.elemento_individual as ei';
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_espaciosfisicos as ef';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\"= ubicacion_elemento";
+				$cadenaSql .= " INNER JOIN arka_parametros.arka_sedes as sd";
+				$cadenaSql .= " ON ef.\"ESF_COD_SEDE\" = sd.\"ESF_COD_SEDE\"";
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_dependencia as dp';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
+				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios as fc';
+				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"=funcionario";
+				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento as el';
+				$cadenaSql .= ' ON ei.id_elemento_ind = el.id_elemento';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' funcionario != 0';
+				$cadenaSql .= ' AND funcionario is not null';
+				$cadenaSql .= ' AND estado_registro = true';
+				$cadenaSql .= ' AND el.tipo_bien != 1';
+				$cadenaSql .= ' AND ei.tipo_confirmada = ' .'\'' . $variable["tipo_confirmacion"] . '\'';
+				$cadenaSql .= ' )';
+				$cadenaSql .= ' as a';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' id_sede ='.'\'' . $variable["sede"] . '\'';
+				$cadenaSql .= ' AND id_dependencia= '.'\'' . $variable["dependencia"] . '\'';	
+				$cadenaSql .= ' ORDER BY doc_fun';
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
+			case 'elementosInventario' :
+				
+				$cadenaSql = '';
+				$cadenaSql .= ' SELECT DISTINCT';
+				$cadenaSql .= ' ei.id_elemento_ind,';
+				$cadenaSql .= ' ei.placa,';
+				$cadenaSql .= ' el.descripcion,';
+				$cadenaSql .= ' ei.confirmada_existencia as estado,';
+				$cadenaSql .= ' el.marca,';
+				$cadenaSql .= ' el.serie,';
+				$cadenaSql .= ' el.nivel,';
+				$cadenaSql .= ' el.total_iva_con,';
+				$cadenaSql .= ' tb.descripcion as tipo_bien,';
+				$cadenaSql .= ' ei.fecha_asignacion,';
+				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as ubicacion_especifica,";
+				$cadenaSql .= ' ei.id_levantamiento';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_inventarios.elemento_individual as ei';
+				$cadenaSql .= ' inner join arka_parametros.arka_espaciosfisicos as ef';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\"= ubicacion_elemento";
+				$cadenaSql .= ' inner join arka_parametros.arka_dependencia dp';
+				$cadenaSql .= " on ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
+				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento el';
+				$cadenaSql .= ' on id_elemento_ind=id_elemento';
+				$cadenaSql .= ' INNER JOIN arka_inventarios.tipo_bienes tb';
+				$cadenaSql .= ' ON tb.id_tipo_bienes = el.tipo_bien';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' ei.estado_registro = true';
+				$cadenaSql .= ' and el.tipo_bien = 2 or el.tipo_bien = 3';
+				$cadenaSql .= ' and ei.funcionario ='.'\'' . $variable["funcionario"] . '\'';
+				$cadenaSql .= ' and dp."ESF_CODIGO_DEP"= '.'\'' . $variable["dependencia"] . '\'';	
+				$cadenaSql .= ' ORDER BY ubicacion_especifica, estado';
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
 										
 			case 'num_visita' :
 				

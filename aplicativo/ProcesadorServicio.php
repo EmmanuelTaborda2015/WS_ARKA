@@ -160,7 +160,51 @@ class ProcesadorServicio {
 	}
 	
 	function tipoConfirmacionInventario($estado, $criterio, $dato, $offset, $limit){
-		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacion' );
+		if($criterio == 0 ){
+			$dato = array(
+					"tipo_confirmacion" => $estado,					
+			);
+			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionTodos', $dato);
+			$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+		}elseif ($criterio == 1){			
+			$variable = explode(",", $dato);	
+			echo 	count($variable);	
+			if(count($variable)==1){
+				$dato = array(
+						"sede" => $dato,
+						"tipo_confirmacion" => $estado,
+				);
+				$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionSede', $dato );
+				$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+			}elseif (count($variable)==2){
+				$dato = array(
+						"sede" => $variable[0],
+						"dependencia" => $variable[1],
+						"tipo_confirmacion" => $estado,
+				);
+				$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionDependencia', $dato );
+				$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
+			}					
+		}elseif ($criterio == 2){
+			$dato = array(
+					"funcionario" => $dato,
+					"tipo_confirmacion" => $estado,
+			);
+			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionFuncionario', $dato);
+			$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');			
+		}	
+		echo $cadenaSql;		
+		return $resultado;
+	}
+	
+	function elementosFuncionario($funcionario, $dependencia){
+		
+		$datos = array(
+				'funcionario' => $funcionario,
+				'dependencia' => $dependencia,
+		);
+		
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'elementosInventario', $datos );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
 		return $resultado;
 	}
@@ -169,7 +213,6 @@ class ProcesadorServicio {
 	
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'tipoConfirmacion' );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');
-		var_dump($cadenaSql);
 		return $resultado;
 	}
 	
@@ -408,7 +451,8 @@ class ProcesadorServicio {
 // $resultado = $llamada->asignar_imagen('3', 'imagen_emmanuel');
 // $resultado = $llamada->consultar_placa_imagen('2015070600000');
 // $resultado = $llamada->consultar_imagen('3');
-//  $resultado = $llamada->tipoConfirmacionInventario();
+//  $resultado = $llamada->tipoConfirmacionInventario("0", "1", "FICC,DEP12", "", "");
+// $resultado = $llamada->elementosFuncionario('79708124', 'FICC040211');
 
 // echo($resultado);
 // var_dump($resultado);
