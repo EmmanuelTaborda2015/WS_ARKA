@@ -193,8 +193,55 @@ class ProcesadorServicio {
 			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionFuncionario', $dato);
 			$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ($cadenaSql, 'busqueda');			
 		}	
-		echo $cadenaSql;		
 		return $resultado;
+	}
+	
+	function consultar_observacion($id_levantamiento) {
+	
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_observacion',  $id_levantamiento);
+		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ($cadenaSql, 'busqueda');
+	
+		return  $resultado;
+	}
+	
+	function guardarObservacion($id_levantamiento, $id_elemento, $funcionario, $observacion, $tipo_movimiento ) {
+	
+		if($observacion==""){
+			$observacion = null;
+		}
+		if($tipo_movimiento==-1){
+			$tipo_movimiento=null;
+		}
+		
+		$datos = array(
+				"id_levantamiento" => $id_levantamiento,
+				"id_elemento" => $id_elemento,
+				"funcionario" => $funcionario,
+				"observacion_almacen" => $observacion,
+				"tipo_movimiento" => $tipo_movimiento,				
+ 		);
+		
+		if($id_levantamiento==""){			
+			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'insertar_guardar_observacion',  $datos);
+			$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ($cadenaSql, 'insertar');
+			var_dump($resultado);
+			$datos = array(
+					"id_levantamiento" => $resultado,
+					"id_elemento" => $id_elemento,
+					"funcionario" => $funcionario,
+					"observacion_almacen" => $observacion,
+					"tipo_movimiento" => $tipo_movimiento,
+			);
+			
+			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'actualizar_guardar_observacion',  $datos);
+			$resultado = $this->conexionPostgresqlInventarios->ejecutarAcceso ($cadenaSql, 'actualizar');
+			
+		}else{
+			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'guardar_observacion',  $datos);
+			$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ($cadenaSql, 'actualizar');
+		}	
+	
+		return  $resultado;
 	}
 	
 	function elementosFuncionario($funcionario, $dependencia){
@@ -339,18 +386,8 @@ class ProcesadorServicio {
 		$resultado = $resultado[0]['descripcion'];
 	
 		return $resultado;
-	}
-	
-	function consultar_observacion($id_elemento) {
-	
-		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_observacion',  $id_elemento);
-		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ($cadenaSql, 'busqueda');
-	
-		$resultado = $resultado[0]['observacion'];
-	
-		return  $resultado;
-	}
-	
+	}	
+		
 	function asignar_elementos($fecha_inicio, $fecha_final) {
 		$datos = array(
 				'fecha_inicio' => $fecha_inicio,
@@ -453,7 +490,8 @@ class ProcesadorServicio {
 // $resultado = $llamada->consultar_imagen('3');
 //  $resultado = $llamada->tipoConfirmacionInventario("0", "1", "FICC,DEP12", "", "");
 // $resultado = $llamada->elementosFuncionario('79708124', 'FICC040211');
-
+// $resultado = $llamada->consultar_observacion('1');
+// $resultado = $llamada->guardarObservacion("1", "2", "79889", "hola", "1" );
 // echo($resultado);
 // var_dump($resultado);
 ?>

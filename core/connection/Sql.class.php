@@ -64,20 +64,6 @@ class Sql {
 				$this->cadenaSql = $cadenaSql;
 				break;
 
-// 				SELECT DISTINCT doc_fun, nom_fun, id_sede, nombre_sede, id_dependencia, nom_dependencia
-// 				FROM (SELECT DISTINCT funcionario as doc_fun, fc."FUN_NOMBRE" as nom_fun, sd."ESF_ID_SEDE" as id_sede, sd."ESF_SEDE"
-// 						as nombre_sede, dp."ESF_CODIGO_DEP" as id_dependencia, dp."ESF_DEP_ENCARGADA" as nom_dependencia, ei.ubicacion_elemento
-// 						as id_espacio, ef."ESF_NOMBRE_ESPACIO" as nom_espacio, el.tipo_bien FROM arka_inventarios.elemento_individual
-// 						as ei INNER JOIN arka_parametros.arka_espaciosfisicos as ef ON ef."ESF_ID_ESPACIO"= ubicacion_elemento
-// 						INNER JOIN arka_parametros.arka_sedes as sd ON ef."ESF_COD_SEDE" = sd."ESF_COD_SEDE" INNER JOIN arka_parametros.arka_dependencia
-// 						as dp ON ef."ESF_ID_ESPACIO" = dp."ESF_ID_ESPACIO" INNER JOIN arka_parametros.arka_funcionarios
-// 						as fc ON fc."FUN_IDENTIFICACION"=funcionario INNER JOIN arka_inventarios.elemento
-// 						as el ON ei.id_elemento_ind = el.id_elemento WHERE funcionario != 0 AND funcionario is not null AND estado_registro = true AND el.tipo_bien != 1) as a
-// 						--WHERE
-// 						--id_sede = 'FICC'
-// 								--id_dependencia='DEP12'
-// 										--doc_fun = '79708124'
-
 			case 'inventariosTipoConfirmacionTodos' :
 				
 				$cadenaSql = 'SELECT';
@@ -308,8 +294,64 @@ class Sql {
 				$cadenaSql .= ' ORDER BY ubicacion_especifica, estado';
 				$this->cadenaSql = $cadenaSql;
 				break;
+			
+			case 'consultar_observacion' :
 				
-										
+				$cadenaSql = 'SELECT';
+				$cadenaSql .= ' observacion_funcionario,';
+				$cadenaSql .= ' observacion_almacen,';
+				$cadenaSql .= ' tipo_movimiento';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_movil.detalle_levantamiento';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' estado_registro=TRUE';
+				$cadenaSql .= ' AND id_levantamiento=' . '\'' . $variable . '\'';
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
+			case 'guardar_observacion' :
+				
+				$cadenaSql = 'UPDATE';
+				$cadenaSql .= ' arka_movil.detalle_levantamiento';
+				$cadenaSql .= ' SET';
+				$cadenaSql .= ' observacion_almacen='. '\'' . $variable["observacion_almacen"] . '\',';
+				$cadenaSql .= ' tipo_movimiento='. '\'' . $variable["tipo_movimiento"] . '\'';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' id_levantamiento='. '\'' . $variable["id_levantamiento"] . '\'';
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
+			case 'insertar_guardar_observacion' :
+				
+				$cadenaSql = 'INSERT';
+				$cadenaSql .= ' INTO';
+				$cadenaSql .= ' arka_movil.detalle_levantamiento';
+				$cadenaSql .= ' (';
+				$cadenaSql .= ' funcionario,';
+				$cadenaSql .= ' observacion_almacen,';
+				$cadenaSql .= ' tipo_movimiento';			
+				$cadenaSql .= ' )';
+				$cadenaSql .= ' VALUES';
+				$cadenaSql .= ' (';
+				$cadenaSql .= ' \'' . $variable["funcionario"] . '\', ';
+				$cadenaSql .= ' \'' . $variable["observacion_almacen"] . '\', ';
+				$cadenaSql .= '\'' . $variable["tipo_movimiento"] . '\' ';				
+				$cadenaSql .= ' )';
+				$cadenaSql .= ' RETURNING id_levantamiento';
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
+			case 'actualizar_guardar_observacion' :
+				
+				$cadenaSql = 'UPDATE';
+				$cadenaSql .= ' arka_inventarios.elemento_individual';
+				$cadenaSql .= ' SET';
+				$cadenaSql .= ' id_levantamiento=' . '\'' . $variable ["id_levantamiento"] . '\'';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' id_elemento_ind=' . '\'' . $variable ["id_elemento"] . '\'';
+				$this->cadenaSql = $cadenaSql;
+				break;
+														
 			case 'num_visita' :
 				
 				$cadenaSql = 'SELECT';
