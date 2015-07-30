@@ -104,7 +104,8 @@ class Sql {
 				$cadenaSql .= ' AND funcionario is not null';
 				$cadenaSql .= ' AND estado_registro = true';
 				$cadenaSql .= ' AND el.tipo_bien != 1';
-				$cadenaSql .= ' AND ei.tipo_confirmada = ' .'\'' . $variable["tipo_confirmacion"] . '\'';
+				$cadenaSql .=  $variable["tipo_confirmacion"];
+				$cadenaSql .=  $variable["radicado"];
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' as a';				
 				$cadenaSql .= ' ORDER BY doc_fun';
@@ -152,7 +153,8 @@ class Sql {
 				$cadenaSql .= ' AND funcionario is not null';
 				$cadenaSql .= ' AND estado_registro = true';
 				$cadenaSql .= ' AND el.tipo_bien != 1';
-				$cadenaSql .= ' AND ei.tipo_confirmada = ' .'\'' . $variable["tipo_confirmacion"] . '\'';
+				$cadenaSql .=  $variable["tipo_confirmacion"];
+				$cadenaSql .=  $variable["radicado"];				
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' as a';
 				$cadenaSql .= ' WHERE';
@@ -201,7 +203,8 @@ class Sql {
 				$cadenaSql .= ' AND funcionario is not null';
 				$cadenaSql .= ' AND estado_registro = true';
 				$cadenaSql .= ' AND el.tipo_bien != 1';
-				$cadenaSql .= ' AND ei.tipo_confirmada = ' .'\'' . $variable["tipo_confirmacion"] . '\'';
+				$cadenaSql .=  $variable["tipo_confirmacion"];
+				$cadenaSql .=  $variable["radicado"];
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' as a';
 				$cadenaSql .= ' WHERE';
@@ -250,7 +253,8 @@ class Sql {
 				$cadenaSql .= ' AND funcionario is not null';
 				$cadenaSql .= ' AND estado_registro = true';
 				$cadenaSql .= ' AND el.tipo_bien != 1';
-				$cadenaSql .= ' AND ei.tipo_confirmada = ' .'\'' . $variable["tipo_confirmacion"] . '\'';
+				$cadenaSql .=  $variable["tipo_confirmacion"];
+				$cadenaSql .=  $variable["radicado"];				
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' as a';
 				$cadenaSql .= ' WHERE';
@@ -259,7 +263,7 @@ class Sql {
 				$cadenaSql .= ' ORDER BY doc_fun';
 				$this->cadenaSql = $cadenaSql;
 				break;
-				
+								
 			case 'elementosInventario' :
 				
 				$cadenaSql = '';
@@ -288,7 +292,7 @@ class Sql {
 				$cadenaSql .= ' ON tb.id_tipo_bienes = el.tipo_bien';
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' ei.estado_registro = true';
-				$cadenaSql .= ' and el.tipo_bien = 2 or el.tipo_bien = 3';
+				$cadenaSql .= ' and (el.tipo_bien = 2 or el.tipo_bien = 3)';
 				$cadenaSql .= ' and ei.funcionario ='.'\'' . $variable["funcionario"] . '\'';
 				$cadenaSql .= ' and dp."ESF_CODIGO_DEP"= '.'\'' . $variable["dependencia"] . '\'';	
 				$cadenaSql .= ' ORDER BY ubicacion_especifica, estado';
@@ -315,7 +319,7 @@ class Sql {
 				$cadenaSql .= ' arka_movil.detalle_levantamiento';
 				$cadenaSql .= ' SET';
 				$cadenaSql .= ' observacion_almacen='. '\'' . $variable["observacion_almacen"] . '\',';
-				$cadenaSql .= ' tipo_movimiento='. '\'' . $variable["tipo_movimiento"] . '\'';
+				$cadenaSql .= ' tipo_movimiento=' . $variable["tipo_movimiento"] ;
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' id_levantamiento='. '\'' . $variable["id_levantamiento"] . '\'';
 				$this->cadenaSql = $cadenaSql;
@@ -335,9 +339,9 @@ class Sql {
 				$cadenaSql .= ' (';
 				$cadenaSql .= ' \'' . $variable["funcionario"] . '\', ';
 				$cadenaSql .= ' \'' . $variable["observacion_almacen"] . '\', ';
-				$cadenaSql .= '\'' . $variable["tipo_movimiento"] . '\' ';				
+				$cadenaSql .=  $variable["tipo_movimiento"] ;				
 				$cadenaSql .= ' )';
-				$cadenaSql .= ' RETURNING id_levantamiento';
+				$cadenaSql .= 'RETURNING id_levantamiento;';
 				$this->cadenaSql = $cadenaSql;
 				break;
 				
