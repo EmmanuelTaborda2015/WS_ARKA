@@ -114,46 +114,61 @@ class ProcesadorServicio {
 			// return 'true ' . $resultado[0]['nombre'];
 		}
 	}
+	
+	
 	function funcionario() {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'funcionario' );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
 		
 		return $resultado;
 	}
+	
+	///__________________________________________
+	
 	function sede() {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'sede' );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
 		
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function dependencia($sede) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'dependencia', $sede );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
 		
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function ubicacion($dependencia) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'ubicacion', $dependencia );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function tipoConfirmacionInventario($estado, $criterio, $dato, $offset, $limit) {
 		if($estado == 3){
-			$est = "TRUE";
+			$radicado = ' rl.funcionario is not null AND';
 		}elseif ($estado == 4){
-			$est = "FALSE";
+			$radicado = ' rl.funcionario is null AND';
 		}
 		if ($criterio == 0) {
-			if ($estado > 2) {				
-					$dato = array (
-							"radicado" => ' AND ei.radicado = ' .'\'' . $est . '\'',
-					);								
+			if ($estado > 2) {
+				$dato = array (
+						"radicado1" => ' LEFT JOIN arka_movil.radicado_levantamiento as rl on ei.funcionario = rl.funcionario',
+						"radicado2" => $radicado,
+				);
 			} else {
 				$dato = array (
-						
-						"tipo_confirmacion" => 'AND ei.tipo_confirmada = ' .'\'' . $estado . '\'', 
+	
+						"tipo_confirmacion" => ' AND ei.tipo_confirmada = ' .'\'' . $estado . '\'',
 				);
-			}			
+			}
 			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionTodos', $dato );
 			$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
 		} elseif ($criterio == 1) {
@@ -162,22 +177,24 @@ class ProcesadorServicio {
 				if ($estado > 2) {
 					$dato = array (
 							"sede" => $dato,
-							"radicado" => ' AND ei.radicado = ' .'\'' . $est . '\'',
+							"radicado1" => ' LEFT JOIN arka_movil.radicado_levantamiento as rl on ei.funcionario = rl.funcionario',
+							"radicado2" => $radicado,
 					);
 				} else {
 					$dato = array (
 							"sede" => $dato,
 							"tipo_confirmacion" => 'AND ei.tipo_confirmada = ' .'\'' . $estado . '\'',
 					);
-				}				
+				}
 				$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionSede', $dato );
 				$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
-			} elseif (count ( $variable ) == 2) {				
+			} elseif (count ( $variable ) == 2) {
 				if ($estado > 2) {
 					$dato = array (
 							"sede" => $variable [0],
 							"dependencia" => $variable [1],
-							"radicado" => ' AND ei.radicado = ' .'\'' . $est . '\'',
+							"radicado1" => ' LEFT JOIN arka_movil.radicado_levantamiento as rl on ei.funcionario = rl.funcionario',
+							"radicado2" => $radicado,
 					);
 				} else {
 					$dato = array (
@@ -194,7 +211,8 @@ class ProcesadorServicio {
 				if($estado < 5){
 					$dato = array (
 							"funcionario" => $dato,
-							"radicado" => ' AND ei.radicado = ' .'\'' . $est . '\'',
+							"radicado1" => ' LEFT JOIN arka_movil.radicado_levantamiento as rl on ei.funcionario = rl.funcionario',
+							"radicado2" => $radicado,
 					);
 				}else{
 					$dato = array (
@@ -206,18 +224,77 @@ class ProcesadorServicio {
 						"funcionario" => $dato,
 						"tipo_confirmacion" => 'AND ei.tipo_confirmada = ' .'\'' . $estado . '\'',
 				);
-			}			
+			}
 			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionFuncionario', $dato );
-			$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );				
-		} 
+			$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
+		}
+		echo $cadenaSql;
 		return $resultado;
 	}
-	function consultar_observacion($id_levantamiento) {
-		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_observacion', $id_levantamiento );
+	
+// 	function tipoConfirmacionInventario($estado, $criterio, $dato, $offset, $limit) {
+// 		if ($criterio == 0) {
+// 			$dato = array (
+// 					"tipo_confirmacion" => 'AND ei.tipo_confirmada = ' . '\'' . $estado . '\'' 
+// 			);
+// 			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionTodos', $dato );
+// 			$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
+// 		} elseif ($criterio == 1) {
+// 			$variable = explode ( ",", $dato );
+// 			if (count ( $variable ) == 1) {
+// 				$dato = array (
+// 						"sede" => $dato,
+// 						"tipo_confirmacion" => 'AND ei.tipo_confirmada = ' . '\'' . $estado . '\'' 
+// 				);
+// 				$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionSede', $dato );
+// 				$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
+// 			} elseif (count ( $variable ) == 2) {
+// 				$dato = array (
+// 						"sede" => $variable [0],
+// 						"dependencia" => $variable [1],
+// 						"tipo_confirmacion" => 'AND ei.tipo_confirmada = ' . '\'' . $estado . '\'' 
+// 				);
+// 				$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionDependencia', $dato );
+// 				$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
+// 			}
+// 		} elseif ($criterio == 2) {
+// 			$dato = array (
+// 					"funcionario" => $dato,
+// 					"tipo_confirmacion" => 'AND ei.tipo_confirmada = ' . '\'' . $estado . '\'' 
+// 			);
+// 			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'inventariosTipoConfirmacionFuncionario', $dato );
+// 			$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
+// 		}
+// 		echo $cadenaSql;
+// 		return $resultado;
+// 	}
+
+	///__________________________________________
+	
+	function buscarUbicacionesEspecificas($funcionario, $dependencia) {
+		for($i = 0; $i < count ( $dependencia ); $i ++) {
+			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'buscarUbicacionesEspecificas', $dependencia [i] );
+			$ubicaciones = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
+			
+			for($j = 0; j < count ( $ubicaciones ); $j ++) {
+				$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'buscarUbicacionesEspecificas', $dependencia [i] );
+				$ubicaciones = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
+			}
+		}
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'buscarUbicacionesEspecificas', $id_levantamiento );
 		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'busqueda' );
-		
+	}
+
+	///__________________________________________
+	
+	function consultar_observacion($id_elemento) {
+		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_observacion', $id_elemento );
+		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'busqueda' );
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function guardarObservacion($id_levantamiento, $id_elemento, $funcionario, $observacion, $tipo_movimiento) {
 		if ($observacion == "") {
 			$observacion = null;
@@ -234,30 +311,15 @@ class ProcesadorServicio {
 				"tipo_movimiento" => $tipo_movimiento 
 		);
 		
-		if ($id_levantamiento == "") {
-			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'insertar_guardar_observacion', $datos );
-			$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'busqueda' );
-			
-			$resul = $resultado [0] ["id_levantamiento"];
-			
-			$datos = array (
-					"id_levantamiento" => $resultado [0] ["id_levantamiento"],
-					"id_elemento" => $id_elemento,
-					"funcionario" => $funcionario,
-					"observacion_almacen" => $observacion,
-					"tipo_movimiento" => $tipo_movimiento 
-			);
-			
-			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'actualizar_guardar_observacion', $datos );
-			$resultado = $this->conexionPostgresqlInventarios->ejecutarAcceso ( $cadenaSql, 'actualizar' );
-			
-			return $resul;
-		} else {
 			$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'guardar_observacion', $datos );
-			$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'actualizar' );
-			return $resultado;
-		}
+			$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'insertar' );
+															
+			return $resultado;		
+		
 	}
+
+	///__________________________________________
+		
 	function elementosFuncionario($funcionario, $dependencia) {
 		$datos = array (
 				'funcionario' => $funcionario,
@@ -268,11 +330,17 @@ class ProcesadorServicio {
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function tipoConfirmacion($dependencia) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'tipoConfirmacion' );
 		$resultado = $this->conexionPostgresqlParametros->ejecutarAcceso ( $cadenaSql, 'busqueda' );
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function consultar_visita() {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'num_visita' );
 		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'busqueda' );
@@ -283,6 +351,9 @@ class ProcesadorServicio {
 			return $resultado;
 		}
 	}
+
+	///__________________________________________
+	
 	function registrarActaVisita($sede, $dependencia, $responsable, $observacion, $fecha, $proxima_vis, $ubicacion) {
 		$datos = array (
 				"sede" => $sede,
@@ -299,6 +370,9 @@ class ProcesadorServicio {
 		
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function actualizarInventario($elemento, $serie, $placa, $estado, $observacion, $fecha_registro) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'actualizar_inventario', $elemento );
 		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'actualizar' );
@@ -329,6 +403,9 @@ class ProcesadorServicio {
 		
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function consultar_elementos($funcionario) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_elementos', $funcionario );
 		$resultado = $this->conexionPostgresqlInventarios->ejecutarAcceso ( $cadenaSql, 'busqueda' );
@@ -336,6 +413,9 @@ class ProcesadorServicio {
 		// En la aplicación android se debe cambiar id_elemento por id_elemento_ind
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function consultar_elementos_dependencia($dependencia) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'elementos_dependencia', $dependencia );
 		$resultado = $this->conexionPostgresqlInventarios->ejecutarAcceso ( $cadenaSql, 'busqueda' );
@@ -343,6 +423,9 @@ class ProcesadorServicio {
 		// En la aplicación android se debe cambiar id_elemento por id_elemento_ind
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function consultar_placa($placa) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'elementos_placa', $placa );
 		$resultado = $this->conexionPostgresqlInventarios->ejecutarAcceso ( $cadenaSql, 'busqueda' );
@@ -350,6 +433,9 @@ class ProcesadorServicio {
 		// En la aplicación android se debe cambiar id_elemento por id_elemento_ind
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function consultar_asignaciones($id_elemento) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_asignaciones', $id_elemento );
 		$datos = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'busqueda' );
@@ -369,6 +455,9 @@ class ProcesadorServicio {
 		// En la aplicación android se debe cambiar id_elemento por id_elemento_ind
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function consultar_estado($id_elemento) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_estado', $id_elemento );
 		$datos = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'busqueda' );
@@ -380,6 +469,9 @@ class ProcesadorServicio {
 		
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function asignar_elementos($fecha_inicio, $fecha_final) {
 		$datos = array (
 				'fecha_inicio' => $fecha_inicio,
@@ -392,6 +484,9 @@ class ProcesadorServicio {
 		// En la aplicación android se debe cambiar id_elemento por id_elemento_ind
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function asignar_elementos_funcionario($sede, $dependencia, $funcionario, $id_elemento, $observaciones, $fecha_registro, $ubicacion) {
 		$datos = array (
 				'sede' => $sede,
@@ -417,6 +512,9 @@ class ProcesadorServicio {
 		// En la aplicación android se debe cambiar id_elemento por id_elemento_ind
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function asignar_imagen($id_elemento, $imagen) {
 		$datos = array (
 				'id_elemento' => $id_elemento,
@@ -431,6 +529,9 @@ class ProcesadorServicio {
 		
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function consultar_placa_imagen($placa) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_placa_imagen', $placa );
 		$resultado = $this->conexionPostgresqlInventarios->ejecutarAcceso ( $cadenaSql, 'busqueda' );
@@ -439,6 +540,9 @@ class ProcesadorServicio {
 		
 		return $resultado;
 	}
+
+	///__________________________________________
+	
 	function consultar_imagen($id_elemento) {
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'consultar_imagen', $id_elemento );
 		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'busqueda' );
@@ -471,9 +575,9 @@ class ProcesadorServicio {
 // $resultado = $llamada->asignar_imagen('3', 'imagen_emmanuel');
 // $resultado = $llamada->consultar_placa_imagen('2015070600000');
 // $resultado = $llamada->consultar_imagen('3');
-// $resultado = $llamada->tipoConfirmacionInventario ( "5", "2", "79708124", "", "" );
-// $resultado = $llamada->elementosFuncionario('79708124', 'FICC040211');
-// $resultado = $llamada->consultar_observacion('1');
+// $resultado = $llamada->tipoConfirmacionInventario ( "4", "0", "", "", "" );
+// $resultado = $llamada->elementosFuncionario('79708124', 'FCMB');
+// $resultado = $llamada->consultar_observacion ( '1' );
 // $resultado = $llamada->guardarObservacion("", "2", "79889", "hola", "1" );
 // echo($resultado);
 // var_dump ( $resultado );

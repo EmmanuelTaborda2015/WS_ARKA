@@ -78,7 +78,7 @@ class Sql {
 				$cadenaSql .= ' (';
 				$cadenaSql .= ' SELECT';
 				$cadenaSql .= ' DISTINCT';
-				$cadenaSql .= ' funcionario as doc_fun,';
+				$cadenaSql .= ' ei.funcionario as doc_fun,';
 				$cadenaSql .= " fc.\"FUN_NOMBRE\" as nom_fun,";
 				$cadenaSql .= " sd.\"ESF_ID_SEDE\" as id_sede,";
 				$cadenaSql .= " sd.\"ESF_SEDE\" as nombre_sede,";
@@ -98,14 +98,15 @@ class Sql {
 				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios as fc';
 				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"=funcionario";
 				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento as el';
-				$cadenaSql .= ' ON ei.id_elemento_ind = el.id_elemento';
+				$cadenaSql .= ' on id_elemento_gen=id_elemento';
+				$cadenaSql .=  $variable["radicado1"];				
 				$cadenaSql .= ' WHERE';
-				$cadenaSql .= ' funcionario != 0';
-				$cadenaSql .= ' AND funcionario is not null';
+				$cadenaSql .=  $variable["radicado2"];				
+				$cadenaSql .= ' ei.funcionario != 0';
+				$cadenaSql .= ' AND ei.funcionario is not null';
 				$cadenaSql .= ' AND estado_registro = true';
 				$cadenaSql .= ' AND el.tipo_bien != 1';
 				$cadenaSql .=  $variable["tipo_confirmacion"];
-				$cadenaSql .=  $variable["radicado"];
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' as a';				
 				$cadenaSql .= ' ORDER BY doc_fun';
@@ -127,7 +128,7 @@ class Sql {
 				$cadenaSql .= ' (';
 				$cadenaSql .= ' SELECT';
 				$cadenaSql .= ' DISTINCT';
-				$cadenaSql .= ' funcionario as doc_fun,';
+				$cadenaSql .= ' ei.funcionario as doc_fun,';
 				$cadenaSql .= " fc.\"FUN_NOMBRE\" as nom_fun,";
 				$cadenaSql .= " sd.\"ESF_ID_SEDE\" as id_sede,";
 				$cadenaSql .= " sd.\"ESF_SEDE\" as nombre_sede,";
@@ -135,7 +136,7 @@ class Sql {
 				$cadenaSql .= " dp.\"ESF_DEP_ENCARGADA\" as nom_dependencia,";
 				$cadenaSql .= ' ei.ubicacion_elemento as id_espacio,';
 				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as nom_espacio,";
-				$cadenaSql .= ' el.tipo_bien';
+				$cadenaSql .= ' el.tipo_bien'; 
 				$cadenaSql .= ' FROM';
 				$cadenaSql .= ' arka_inventarios.elemento_individual as ei';
 				$cadenaSql .= ' INNER JOIN arka_parametros.arka_espaciosfisicos as ef';
@@ -145,16 +146,17 @@ class Sql {
 				$cadenaSql .= ' INNER JOIN arka_parametros.arka_dependencia as dp';
 				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
 				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios as fc';
-				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"=funcionario";
+				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"= ei.funcionario";
 				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento as el';
-				$cadenaSql .= ' ON ei.id_elemento_ind = el.id_elemento';
+				$cadenaSql .= ' on id_elemento_gen=id_elemento';
+				$cadenaSql .=  $variable["radicado1"];				
 				$cadenaSql .= ' WHERE';
-				$cadenaSql .= ' funcionario != 0';
-				$cadenaSql .= ' AND funcionario is not null';
+				$cadenaSql .=  $variable["radicado2"];				
+				$cadenaSql .= ' ei.funcionario != 0';
+				$cadenaSql .= ' AND ei.funcionario is not null';
 				$cadenaSql .= ' AND estado_registro = true';
 				$cadenaSql .= ' AND el.tipo_bien != 1';
 				$cadenaSql .=  $variable["tipo_confirmacion"];
-				$cadenaSql .=  $variable["radicado"];				
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' as a';
 				$cadenaSql .= ' WHERE';
@@ -165,7 +167,7 @@ class Sql {
 				
 				case 'inventariosTipoConfirmacionSede' :
 				
-								$cadenaSql = 'SELECT';
+				$cadenaSql = 'SELECT';
 				$cadenaSql .= ' DISTINCT';
 				$cadenaSql .= ' doc_fun,';
 				$cadenaSql .= ' nom_fun,';
@@ -177,7 +179,7 @@ class Sql {
 				$cadenaSql .= ' (';
 				$cadenaSql .= ' SELECT';
 				$cadenaSql .= ' DISTINCT';
-				$cadenaSql .= ' funcionario as doc_fun,';
+				$cadenaSql .= ' ei.funcionario as doc_fun,';
 				$cadenaSql .= " fc.\"FUN_NOMBRE\" as nom_fun,";
 				$cadenaSql .= " sd.\"ESF_ID_SEDE\" as id_sede,";
 				$cadenaSql .= " sd.\"ESF_SEDE\" as nombre_sede,";
@@ -195,16 +197,17 @@ class Sql {
 				$cadenaSql .= ' INNER JOIN arka_parametros.arka_dependencia as dp';
 				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
 				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios as fc';
-				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"=funcionario";
+				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"= ei.funcionario";
 				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento as el';
-				$cadenaSql .= ' ON ei.id_elemento_ind = el.id_elemento';
+				$cadenaSql .= ' on id_elemento_gen=id_elemento';
+				$cadenaSql .=  $variable["radicado1"];
 				$cadenaSql .= ' WHERE';
-				$cadenaSql .= ' funcionario != 0';
-				$cadenaSql .= ' AND funcionario is not null';
+				$cadenaSql .=  $variable["radicado2"];
+				$cadenaSql .= ' ei.funcionario != 0';
+				$cadenaSql .= ' AND ei.funcionario is not null';
 				$cadenaSql .= ' AND estado_registro = true';
 				$cadenaSql .= ' AND el.tipo_bien != 1';
 				$cadenaSql .=  $variable["tipo_confirmacion"];
-				$cadenaSql .=  $variable["radicado"];
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' as a';
 				$cadenaSql .= ' WHERE';
@@ -215,7 +218,7 @@ class Sql {
 			
 			case 'inventariosTipoConfirmacionDependencia' :
 				
-								$cadenaSql = 'SELECT';
+				$cadenaSql = 'SELECT';
 				$cadenaSql .= ' DISTINCT';
 				$cadenaSql .= ' doc_fun,';
 				$cadenaSql .= ' nom_fun,';
@@ -227,7 +230,7 @@ class Sql {
 				$cadenaSql .= ' (';
 				$cadenaSql .= ' SELECT';
 				$cadenaSql .= ' DISTINCT';
-				$cadenaSql .= ' funcionario as doc_fun,';
+				$cadenaSql .= ' ei.funcionario as doc_fun,';
 				$cadenaSql .= " fc.\"FUN_NOMBRE\" as nom_fun,";
 				$cadenaSql .= " sd.\"ESF_ID_SEDE\" as id_sede,";
 				$cadenaSql .= " sd.\"ESF_SEDE\" as nombre_sede,";
@@ -247,14 +250,15 @@ class Sql {
 				$cadenaSql .= ' INNER JOIN arka_parametros.arka_funcionarios as fc';
 				$cadenaSql .= " ON fc.\"FUN_IDENTIFICACION\"=funcionario";
 				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento as el';
-				$cadenaSql .= ' ON ei.id_elemento_ind = el.id_elemento';
+				$cadenaSql .= ' on id_elemento_gen=id_elemento';
+				$cadenaSql .=  $variable["radicado1"];
 				$cadenaSql .= ' WHERE';
-				$cadenaSql .= ' funcionario != 0';
-				$cadenaSql .= ' AND funcionario is not null';
+				$cadenaSql .=  $variable["radicado2"];				
+				$cadenaSql .= ' ei.funcionario != 0';
+				$cadenaSql .= ' AND ei.funcionario is not null';
 				$cadenaSql .= ' AND estado_registro = true';
 				$cadenaSql .= ' AND el.tipo_bien != 1';
 				$cadenaSql .=  $variable["tipo_confirmacion"];
-				$cadenaSql .=  $variable["radicado"];				
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' as a';
 				$cadenaSql .= ' WHERE';
@@ -264,6 +268,29 @@ class Sql {
 				$this->cadenaSql = $cadenaSql;
 				break;
 								
+			case 'actualizarRadicado' :
+				
+				$cadenaSql = 'UPDATE';
+				$cadenaSql .= ' arka_inventarios.elemento_individual';
+				$cadenaSql .= ' SET';
+				$cadenaSql .= ' radicado=' . '\'' . 'TRUE' . '\',';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' funcionario=' . '\'' . $variable ["funcionario"] . '\'';
+				$cadenaSql .= ' ubicacion=' . '\'' . $variable ["id_levantamiento"] . '\'';				
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
+			case 'buscarUbicacionesEspecificas' :
+				$cadenaSql = 'SELECT';
+				$cadenaSql .= ' DISTINCT';
+				$cadenaSql .= " \"ESF_ID_ESPACIO\"";
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_parametros.arka_dependencia';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= " \"ESF_CODIGO_DEP\"=" . '\'' . $variable . '\'';
+				$this->cadenaSql = $cadenaSql;
+				break;
+					
 			case 'elementosInventario' :
 				
 				$cadenaSql = '';
@@ -278,8 +305,7 @@ class Sql {
 				$cadenaSql .= ' el.total_iva_con,';
 				$cadenaSql .= ' tb.descripcion as tipo_bien,';
 				$cadenaSql .= ' ei.fecha_asignacion,';
-				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as ubicacion_especifica,";
-				$cadenaSql .= ' ei.id_levantamiento';
+				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as ubicacion_especifica";
 				$cadenaSql .= ' FROM';
 				$cadenaSql .= ' arka_inventarios.elemento_individual as ei';
 				$cadenaSql .= ' inner join arka_parametros.arka_espaciosfisicos as ef';
@@ -287,7 +313,7 @@ class Sql {
 				$cadenaSql .= ' inner join arka_parametros.arka_dependencia dp';
 				$cadenaSql .= " on ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
 				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento el';
-				$cadenaSql .= ' on id_elemento_ind=id_elemento';
+				$cadenaSql .= ' on id_elemento_gen=id_elemento';
 				$cadenaSql .= ' INNER JOIN arka_inventarios.tipo_bienes tb';
 				$cadenaSql .= ' ON tb.id_tipo_bienes = el.tipo_bien';
 				$cadenaSql .= ' WHERE';
@@ -302,57 +328,41 @@ class Sql {
 			case 'consultar_observacion' :
 				
 				$cadenaSql = 'SELECT';
-				$cadenaSql .= ' observacion_funcionario,';
-				$cadenaSql .= ' observacion_almacen,';
-				$cadenaSql .= ' tipo_movimiento';
+				$cadenaSql .= ' id_detallelevantamiento,';				
+				$cadenaSql .= ' observacion,';
+				$cadenaSql .= ' tipo_movimiento,';
+				$cadenaSql .= ' fecha_registro,';
+				$cadenaSql .= ' creador_observacion';
 				$cadenaSql .= ' FROM';
 				$cadenaSql .= ' arka_movil.detalle_levantamiento';
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' estado_registro=TRUE';
-				$cadenaSql .= ' AND id_levantamiento=' . '\'' . $variable . '\'';
+				$cadenaSql .= ' AND id_elemento_individual=' . '\'' . $variable . '\'';
 				$this->cadenaSql = $cadenaSql;
-				break;
+				break;			
+			
 				
 			case 'guardar_observacion' :
-				
-				$cadenaSql = 'UPDATE';
-				$cadenaSql .= ' arka_movil.detalle_levantamiento';
-				$cadenaSql .= ' SET';
-				$cadenaSql .= ' observacion_almacen='. '\'' . $variable["observacion_almacen"] . '\',';
-				$cadenaSql .= ' tipo_movimiento=' . $variable["tipo_movimiento"] ;
-				$cadenaSql .= ' WHERE';
-				$cadenaSql .= ' id_levantamiento='. '\'' . $variable["id_levantamiento"] . '\'';
-				$this->cadenaSql = $cadenaSql;
-				break;
-				
-			case 'insertar_guardar_observacion' :
 				
 				$cadenaSql = 'INSERT';
 				$cadenaSql .= ' INTO';
 				$cadenaSql .= ' arka_movil.detalle_levantamiento';
 				$cadenaSql .= ' (';
 				$cadenaSql .= ' funcionario,';
-				$cadenaSql .= ' observacion_almacen,';
-				$cadenaSql .= ' tipo_movimiento';			
+				$cadenaSql .= ' observacion,';
+				$cadenaSql .= ' tipo_movimiento,';
+				$cadenaSql .= ' id_elemento_individual,';
+				$cadenaSql .= ' creador_observacion';
 				$cadenaSql .= ' )';
 				$cadenaSql .= ' VALUES';
 				$cadenaSql .= ' (';
 				$cadenaSql .= ' \'' . $variable["funcionario"] . '\', ';
 				$cadenaSql .= ' \'' . $variable["observacion_almacen"] . '\', ';
-				$cadenaSql .=  $variable["tipo_movimiento"] ;				
+				$cadenaSql .=  $variable["tipo_movimiento"] . ',';
+				$cadenaSql .=  $variable["id_elemento"] . ',';
+				$cadenaSql .=  "1" ;
 				$cadenaSql .= ' )';
-				$cadenaSql .= 'RETURNING id_levantamiento;';
-				$this->cadenaSql = $cadenaSql;
-				break;
-				
-			case 'actualizar_guardar_observacion' :
-				
-				$cadenaSql = 'UPDATE';
-				$cadenaSql .= ' arka_inventarios.elemento_individual';
-				$cadenaSql .= ' SET';
-				$cadenaSql .= ' id_levantamiento=' . '\'' . $variable ["id_levantamiento"] . '\'';
-				$cadenaSql .= ' WHERE';
-				$cadenaSql .= ' id_elemento_ind=' . '\'' . $variable ["id_elemento"] . '\'';
+				$cadenaSql .= 'RETURNING id_detallelevantamiento;';
 				$this->cadenaSql = $cadenaSql;
 				break;
 														
