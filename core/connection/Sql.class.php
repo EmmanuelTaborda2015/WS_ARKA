@@ -301,7 +301,7 @@ class Sql {
 				$cadenaSql .= ' ei.confirmada_existencia as estado,';
 				$cadenaSql .= ' el.marca,';
 				$cadenaSql .= ' el.serie,';
-				$cadenaSql .= ' el.nivel,';
+				$cadenaSql .= ' ce.elemento_nombre,';
 				$cadenaSql .= ' el.total_iva_con,';
 				$cadenaSql .= ' tb.descripcion as tipo_bien,';
 				$cadenaSql .= ' ei.fecha_asignacion,';
@@ -316,11 +316,45 @@ class Sql {
 				$cadenaSql .= ' on id_elemento_gen=id_elemento';
 				$cadenaSql .= ' INNER JOIN arka_inventarios.tipo_bienes tb';
 				$cadenaSql .= ' ON tb.id_tipo_bienes = el.tipo_bien';
+				$cadenaSql .= ' INNER JOIN catalogo.catalogo_elemento ce ON el.nivel = ce.elemento_id';
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' ei.estado_registro = true';
 				$cadenaSql .= ' and (el.tipo_bien = 2 or el.tipo_bien = 3)';
 				$cadenaSql .= ' and ei.funcionario ='.'\'' . $variable["funcionario"] . '\'';
 				$cadenaSql .= ' and dp."ESF_CODIGO_DEP"= '.'\'' . $variable["dependencia"] . '\'';	
+				$cadenaSql .= ' ORDER BY ubicacion_especifica, estado';
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
+			case 'elementoInventarioPlaca' :
+				
+				$cadenaSql = '';
+				$cadenaSql .= ' SELECT DISTINCT';
+				$cadenaSql .= " ei.funcionario as doc_funcionario, fn.\"FUN_NOMBRE\" as nom_funcionario, ei.id_elemento_ind,";				
+				$cadenaSql .= ' ei.placa,';
+				$cadenaSql .= ' el.descripcion,';
+				$cadenaSql .= ' ei.confirmada_existencia as estado,';
+				$cadenaSql .= ' el.marca,';
+				$cadenaSql .= ' el.serie,';
+				$cadenaSql .= ' ce.elemento_nombre,';
+				$cadenaSql .= ' el.total_iva_con,';
+				$cadenaSql .= ' tb.descripcion as tipo_bien,';
+				$cadenaSql .= ' ei.fecha_asignacion,';
+				$cadenaSql .= " ef.\"ESF_NOMBRE_ESPACIO\" as ubicacion_especifica";
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_inventarios.elemento_individual as ei';
+				$cadenaSql .= ' inner join arka_parametros.arka_espaciosfisicos as ef';
+				$cadenaSql .= " ON ef.\"ESF_ID_ESPACIO\"= ubicacion_elemento";
+				$cadenaSql .= ' inner join arka_parametros.arka_dependencia dp';
+				$cadenaSql .= " on ef.\"ESF_ID_ESPACIO\" = dp.\"ESF_ID_ESPACIO\"";
+				$cadenaSql .= ' INNER JOIN arka_inventarios.elemento el';
+				$cadenaSql .= ' on id_elemento_gen=id_elemento';
+				$cadenaSql .= ' INNER JOIN arka_inventarios.tipo_bienes tb';
+				$cadenaSql .= ' ON tb.id_tipo_bienes = el.tipo_bien';
+				$cadenaSql .= ' INNER JOIN catalogo.catalogo_elemento ce ON el.nivel = ce.elemento_id';
+				$cadenaSql .= " INNER JOIN arka_parametros.arka_funcionarios fn ON ei.funcionario = fn.\"FUN_IDENTIFICACION\"";				
+				$cadenaSql .= ' WHERE';			
+				$cadenaSql .= ' ei.id_elemento_ind =' . '\'' . $variable . '\'';
 				$cadenaSql .= ' ORDER BY ubicacion_especifica, estado';
 				$this->cadenaSql = $cadenaSql;
 				break;
@@ -358,7 +392,7 @@ class Sql {
 				$cadenaSql .= ' (';
 				$cadenaSql .= ' \'' . $variable["funcionario"] . '\', ';
 				$cadenaSql .= ' \'' . $variable["observacion_almacen"] . '\', ';
-				$cadenaSql .=  $variable["tipo_movimiento"] . ',';
+				$cadenaSql .=  ' \'' . $variable["tipo_movimiento"] . '\', ';
 				$cadenaSql .=  $variable["id_elemento"] . ',';
 				$cadenaSql .=  "1" ;
 				$cadenaSql .= ' )';
