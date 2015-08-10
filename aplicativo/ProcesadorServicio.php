@@ -491,14 +491,10 @@ class ProcesadorServicio {
 		$datos = array (
 				'id_elemento' => $id_elemento,
 				'imagen' => $imagen 
-		);
-		
-		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'actualizar_imagen', $datos ['id_elemento'] );
-		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'actualizar' );
+		);		
 		
 		$cadenaSql = $this->miFabricaConexiones->getCadenaSql ( 'asignar_imagen', $datos );
 		$resultado = $this->conexionPostgresqlMovil->ejecutarAcceso ( $cadenaSql, 'insertar' );
-		
 		return $resultado;
 	}
 

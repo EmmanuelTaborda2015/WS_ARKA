@@ -951,18 +951,7 @@ class Sql {
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' id_elemento_ind=' . '\'' . $variable . '\'';
 				$this->cadenaSql = $cadenaSql;
-				break;
-				
-			case 'actualizar_imagen' :
-				
-				$cadenaSql = 'UPDATE';
-				$cadenaSql .= ' arka_movil.asignar_imagen';
-				$cadenaSql .= ' SET';
-				$cadenaSql .= ' estado_registro=False';
-				$cadenaSql .= ' WHERE';
-				$cadenaSql .= ' id_elemento=' . '\'' . $variable . '\'';	
-				$this->cadenaSql = $cadenaSql;
-				break;
+				break;			
 				
 			case 'asignar_imagen' :
 				
