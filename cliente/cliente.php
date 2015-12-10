@@ -16,7 +16,7 @@ $client = new SoapClient(null, array(  'location' => $_Request['ruta'], // Ruta 
 // 	echo $e->faultstring;
 // }
 try {
-	$resultado = $client->tipoConfirmacionInventario();
+	$resultado = $client->funcionario('pau');
 	var_dump( $resultado );
 
 } catch(SoapDefault $e) {

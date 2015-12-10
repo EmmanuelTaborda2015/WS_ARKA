@@ -1,4 +1,7 @@
 <?php
+
+require_once ("../core/crypto/Encriptador.class.php");
+
 class Sql {
 	
 	var $cadenaSql;
@@ -9,7 +12,56 @@ class Sql {
 	function sql($opcion, $variable = '') {
 		
 		switch ($opcion) {
+			
+			case 'table':
+				$this->cadenaSql = " Select * from arka_dbms";
+				break;
+				
+			case 'cerrarSesion':
+				$this->cadenaSql = " Delete From ";
+				$this->cadenaSql.=  "arka_valor_sesion ";
+				$this->cadenaSql.=  "WHERE ";
+				$this->cadenaSql.=  "sesionid ='" . $variable . "' ";
+				$this->cadenaSql.=  "and variable = 'idUsuario'";
+				break;
+				
+			case "insertarValorSesion" :
+				$this->cadenaSql = "INSERT INTO arka_valor_sesion ( sesionid, variable, valor, expiracion) VALUES ('" . $variable ['id_dispositivo'] . "', '" . $variable ['tipo_sesion'] . "', '" . $variable ["valor"] . "', '" . $variable ['expiracion'] . "' )";
+				break;
+				
+			case "validarSesion":
+				$this->cadenaSql = " Select * From ";
+				$this->cadenaSql.=  "arka_valor_sesion ";
+				$this->cadenaSql.=  "WHERE ";
+				$this->cadenaSql.=  "sesionid ='" . $variable . "'";
+				break;
 					
+			case "registroLogUsuario" :
+				$this->cadenaSql = " INSERT INTO  ";
+				$this->cadenaSql.=  "arka_log_usuario  ";
+				$this->cadenaSql.= "(  ";
+				$this->cadenaSql.= "id_usuario,  ";
+				$this->cadenaSql.= "accion,  ";
+				$this->cadenaSql.= "id_registro,  ";
+				$this->cadenaSql.= "tipo_registro,  ";
+				$this->cadenaSql.= "nombre_registro,  ";
+				$this->cadenaSql .= "fecha_log,  ";
+				$this->cadenaSql .= "descripcion , ";
+				$this->cadenaSql .= "host  ";
+				$this->cadenaSql .= ")  ";
+				$this->cadenaSql .= "VALUES  ";
+				$this->cadenaSql .= "(  ";
+				$this->cadenaSql .= "'".$variable['id_usuario']."',  ";
+				$this->cadenaSql .= "'".$variable['accion']."',  ";
+				$this->cadenaSql .= "'".$variable['id_registro']."',  ";
+				$this->cadenaSql .= "'".$variable['tipo_registro']."',  ";
+				$this->cadenaSql .= "'".$variable['nombre_registro']."',  ";
+				$this->cadenaSql .= "'".$variable['fecha_log']."',  ";
+				$this->cadenaSql .= "'".$variable['descripcion']."',  ";
+				$this->cadenaSql .= "'".$variable['host']."'  ";
+				$this->cadenaSql .= ")";
+				break;
+				
 			case 'login' :
 				
 				$cadenaSql = 'SELECT';
@@ -21,6 +73,14 @@ class Sql {
 				$cadenaSql .= ' AND';
 				$cadenaSql .= ' clave='. '\'' . $variable["contrasena"] . '\'';	
 				$this->cadenaSql = $cadenaSql; 	
+				break;
+				
+			case "funcionario2" :
+				$cadenaSql = "SELECT \"FUN_NOMBRE\", \"FUN_IDENTIFICACION\"";
+				$cadenaSql .= " FROM arka_parametros.arka_funcionarios";
+				$cadenaSql .= " WHERE cast(\"FUN_NOMBRE\" as text) LIKE '%" . $variable . "%'";
+				$cadenaSql .= " OR cast(\"FUN_IDENTIFICACION\" as text)  LIKE '%" . $variable . "%' LIMIT 10;";
+				$this->cadenaSql = $cadenaSql;
 				break;
 				
 			case 'funcionario' :
@@ -108,8 +168,11 @@ class Sql {
 				$cadenaSql .= ' AND el.tipo_bien != 1';
 				$cadenaSql .=  $variable["tipo_confirmacion"];
 				$cadenaSql .= ' )';
-				$cadenaSql .= ' as a';				
+				$cadenaSql .= ' as a';									
 				$cadenaSql .= ' ORDER BY doc_fun';
+				$cadenaSql .= ' limit ' . $variable["limit"];
+				$cadenaSql .= ' offset ' . $variable["offset"];
+				
 				$this->cadenaSql = $cadenaSql;
 				break;
 				
@@ -162,6 +225,8 @@ class Sql {
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' doc_fun =' .'\'' . $variable["funcionario"] . '\'';
 				$cadenaSql .= ' ORDER BY doc_fun';
+				$cadenaSql .= ' limit ' . $variable["limit"];
+				$cadenaSql .= ' offset ' . $variable["offset"];
 				$this->cadenaSql = $cadenaSql;
 				break;
 				
@@ -213,6 +278,8 @@ class Sql {
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' id_sede =' .'\'' . $variable["sede"] . '\'';
 				$cadenaSql .= ' ORDER BY doc_fun';
+				$cadenaSql .= ' limit ' . $variable["limit"];
+				$cadenaSql .= ' offset ' . $variable["offset"];
 				$this->cadenaSql = $cadenaSql;
 				break;
 			
@@ -265,6 +332,8 @@ class Sql {
 				$cadenaSql .= ' id_sede ='.'\'' . $variable["sede"] . '\'';
 				$cadenaSql .= ' AND id_dependencia= '.'\'' . $variable["dependencia"] . '\'';	
 				$cadenaSql .= ' ORDER BY doc_fun';
+				$cadenaSql .= ' limit ' . $variable["limit"];
+				$cadenaSql .= ' offset ' . $variable["offset"];
 				$this->cadenaSql = $cadenaSql;
 				break;
 								
@@ -990,6 +1059,17 @@ class Sql {
 				$cadenaSql .= ' WHERE';
 				$cadenaSql .= ' estado_registro = TRUE';				
 				$cadenaSql .= ' AND id_elemento=' . '\'' . $variable . '\'';
+				$this->cadenaSql = $cadenaSql;
+				break;
+				
+			case 'periodo' :				
+				$cadenaSql = 'SELECT';
+				$cadenaSql .= ' fecha_inicio, fecha_final';
+				$cadenaSql .= ' FROM';
+				$cadenaSql .= ' arka_movil.periodo_levantamiento';
+				$cadenaSql .= ' WHERE';
+				$cadenaSql .= ' estado_registro = TRUE';
+				$cadenaSql .= ' AND cierre_levantamiento=FALSE';
 				$this->cadenaSql = $cadenaSql;
 				break;
 											
