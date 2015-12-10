@@ -30,61 +30,17 @@ class DatoConexion{
     			$this->puerto=$this->dbp['dbpuerto'];
     			$this->db=$this->dbp['dbnombre'];
     			$this->usuario=$this->dbp['dbusuario'];
-    			$this->clave=$this->dbp['dbclave'];
-    			
-    			$this->motorDB='pgsql';
-    			$this->direccionServidor='10.20.0.38';
-    			$this->puerto='5432';
-    			$this->db='arka';
-    			$this->usuario='arka_frame';
-    			$this->clave='Arka2014=OAS';
+    			$this->clave=$this->dbp['dbclave'];    			
     			break;
     			
     		case "frame":
-    			    			 
-    			$this->motorDB=$this->dbp['dbsys'];
-    			$this->direccionServidor=$this->dbp['dbdns'];
-    			$this->puerto=$this->dbp['dbpuerto'];
-    			$this->db=$this->dbp['dbnombre'];
-    			$this->usuario="arka_frame";
-    			$this->clave=$this->dbp['dbclave'];
-    			
-    			$this->motorDB='pgsql';
-    			$this->direccionServidor='10.20.0.38';
-    			$this->puerto='5432';
-    			$this->db='arka';
-    			$this->usuario='arka_frame';
-    			$this->clave='Arka2014=OAS';
     			break;
     			
     		case "inventarios" :
-				
-    			$this->motorDB=$this->dbp['dbsys'];
-    			$this->direccionServidor=$this->dbp['dbdns'];
-    			$this->puerto=$this->dbp['dbpuerto'];
-    			$this->db=$this->dbp['dbnombre'];
-    			$this->usuario="arka_inventarios";
-    			$this->clave=$this->dbp['dbclave'];
-    			break;
+				break;
 
 			case "movil" :
-
-    			$this->motorDB=$this->dbp['dbsys'];
-    			$this->direccionServidor=$this->dbp['dbdns'];
-    			$this->puerto=$this->dbp['dbpuerto'];
-    			$this->db=$this->dbp['dbnombre'];
-    			$this->usuario="arka_movil";
-    			$this->clave=$this->dbp['dbclave'];
-				
-			case "parametros" :
-				
-    			$this->motorDB=$this->dbp['dbsys'];
-    			$this->direccionServidor=$this->dbp['dbdns'];
-    			$this->puerto=$this->dbp['dbpuerto'];
-    			$this->db=$this->dbp['dbnombre'];
-    			$this->usuario="arka_parametros";
-    			$this->clave=$this->dbp['dbclave'];
-    		
+				break;
     	}
     	
     	return true;
